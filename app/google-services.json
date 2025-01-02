@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "776856461605",
+    "project_id": "applicate-42dba",
+    "storage_bucket": "applicate-42dba.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:776856461605:android:1cae72e70f26a3ffa63acc",
+        "android_client_info": {
+          "package_name": "com.example.applicate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOpV-frlOWQiB7I7CiH4PYXyOblqm3mPs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

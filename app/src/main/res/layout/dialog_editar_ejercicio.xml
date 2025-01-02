@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/edtNombreEjercicio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre del ejercicio" />
+
+    <EditText
+        android:id="@+id/edtNumSeries"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Número de series"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/edtNumReps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Número de repeticiones" />
+
+    <EditText
+        android:id="@+id/edtPeso"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Peso" />
+
+    <EditText
+        android:id="@+id/edtDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Descripción" />
+</LinearLayout>
