@@ -1,1 +1,1 @@
-Subir y publicar la app
+Aplicación Android "APPLICATE".
