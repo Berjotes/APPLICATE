@@ -45,13 +45,12 @@ public class GestorClientesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_clientes);
 
-
         // Configurar el botón para forzar un fallo
-        Button btnCrash = findViewById(R.id.btnCrash);
-        btnCrash.setOnClickListener(v -> {
-            Log.d("CrashlyticsTest", "Se ha pulsado el botón de crash en la lista de clientes");
-            throw new RuntimeException("Prueba de Crashlytics - Forzando un fallo en la lista de clientes");
-        });
+        //Button btnCrash = findViewById(R.id.btnCrash);
+        //btnCrash.setOnClickListener(v -> {
+        //    Log.d("CrashlyticsTest", "Se ha pulsado el botón de crash en la lista de clientes");
+        //    throw new RuntimeException("Prueba de Crashlytics - Forzando un fallo en la lista de clientes");
+        //});
 
         // Configurar Toolbar
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);

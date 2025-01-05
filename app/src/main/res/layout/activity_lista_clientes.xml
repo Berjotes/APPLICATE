@@ -52,17 +52,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Añadir Cliente"
-        app:layout_constraintBottom_toTopOf="@id/btnCrash"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Botón Forzar Fallo -->
-    <Button
-        android:id="@+id/btnCrash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Forzar fallo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
