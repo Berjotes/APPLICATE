@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -82,10 +83,10 @@ public class DetallesRutinaActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Log.e("DetallesRutina", "Error al cargar ejercicios", e);
+                    FirebaseCrashlytics.getInstance().recordException(e); // Registra la excepción en Crashlytics
                     Toast.makeText(this, "Error al cargar los ejercicios de la rutina.", Toast.LENGTH_SHORT).show();
                 });
     }
-
 
     private void mostrarDetallesRutina(Map<String, List<String>> ejerciciosAgrupados) {
         StringBuilder detalles = new StringBuilder();

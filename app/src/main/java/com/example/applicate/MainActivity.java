@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,13 +29,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.cerrar_sesion) {
-            Log.d("MainActivity", "Cerrar sesión");
-            logout();
-            return true;
+        try {
+            if (item.getItemId() == R.id.cerrar_sesion) {
+                Log.d("MainActivity", "Cerrar sesión");
+                logout();
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e); // Registrar en Crashlytics
+            Toast.makeText(this, "Ocurrió un error al procesar la acción.", Toast.LENGTH_SHORT).show();
+            return false;
         }
-        return super.onOptionsItemSelected(item);
     }
+
 
     private void logout() {
         FirebaseAuth.getInstance().signOut(); // Cerrar sesión en Firebase

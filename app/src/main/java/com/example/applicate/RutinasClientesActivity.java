@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.applicate.adaptadores.AdaptadorRutina;
 import com.example.applicate.modelos.Rutina;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -173,13 +174,18 @@ public class RutinasClientesActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         List<Rutina> rutinas = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            Long numRutina = document.getLong("num_rutina");
-                            String fechaCreacion = document.getString("fecha_creacion");
+                            try {
+                                Long numRutina = document.getLong("num_rutina");
+                                String fechaCreacion = document.getString("fecha_creacion");
 
-                            if (numRutina != null && fechaCreacion != null) {
-                                rutinas.add(new Rutina(numRutina.intValue(), fechaCreacion));
-                            } else {
-                                Log.w("RutinasClientes", "Documento sin campos requeridos: " + document.getId());
+                                if (numRutina != null && fechaCreacion != null) {
+                                    rutinas.add(new Rutina(numRutina.intValue(), fechaCreacion));
+                                } else {
+                                    Log.w("RutinasClientes", "Documento sin campos requeridos: " + document.getId());
+                                }
+                            } catch (Exception e) {
+                                FirebaseCrashlytics.getInstance().recordException(e);
+                                Log.e("RutinasClientes", "Error procesando rutina: " + document.getId(), e);
                             }
                         }
                         if (rutinas.isEmpty()) {
@@ -187,12 +193,15 @@ public class RutinasClientesActivity extends AppCompatActivity {
                         }
                         actualizarVistaRutinas(rutinas);
                     } else {
-                        Log.e("RutinasClientes", "Error al obtener rutinas", task.getException());
+                        Exception exception = task.getException();
+                        FirebaseCrashlytics.getInstance().recordException(exception);
+                        Log.e("RutinasClientes", "Error al obtener rutinas", exception);
                         Toast.makeText(this, "Error al cargar las rutinas", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("RutinasClientes", "Error al acceder a la subcoleccion RUTINAS", e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                    Log.e("RutinasClientes", "Error al acceder a la subcolección RUTINAS", e);
                     Toast.makeText(this, "Error al cargar las rutinas del cliente", Toast.LENGTH_SHORT).show();
                 });
     }
@@ -224,25 +233,28 @@ public class RutinasClientesActivity extends AppCompatActivity {
                     });
         });
         adaptadorRutina.setOnItemLongClickListener(rutina -> mostrarOpcionesRutina(rutina));
-
         recyclerView.setAdapter(adaptadorRutina);
     }
-
 
     private void mostrarOpcionesRutina(Rutina rutina) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Opciones de Rutina")
                 .setItems(new String[]{"Editar", "Eliminar"}, (dialog, which) -> {
-                    if (which == 0) {
-                        editarRutina(rutina); // Llama a la funcionalidad de edición
-                    } else if (which == 1) {
-                        mostrarDialogoConfirmacionBorrado(rutina); // Muestra la confirmación al eliminar
+                    try {
+                        if (which == 0) {
+                            editarRutina(rutina); // Llama a la funcionalidad de edición
+                        } else if (which == 1) {
+                            mostrarDialogoConfirmacionBorrado(rutina); // Muestra la confirmación al eliminar
+                        } else {
+                            throw new IllegalStateException("Opción inesperada seleccionada en el menú de opciones de rutina.");
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.e("RutinasClientes", "Error al manejar opción de rutina", e);
                     }
                 });
         builder.show();
     }
-
-
 
     private void editarRutina(Rutina rutina) {
         String idCliente = getIntent().getStringExtra("idCliente");
@@ -271,8 +283,6 @@ public class RutinasClientesActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
-
     private void eliminarRutina(Rutina rutina) {
         String idCliente = getIntent().getStringExtra("idCliente");
         if (idCliente == null || rutina == null) {
@@ -291,15 +301,16 @@ public class RutinasClientesActivity extends AppCompatActivity {
                                     obtenerRutinas(); // Actualizar la lista
                                 })
                                 .addOnFailureListener(e -> {
+                                    FirebaseCrashlytics.getInstance().recordException(e);
                                     Toast.makeText(this, "Error al eliminar la rutina.", Toast.LENGTH_SHORT).show();
                                     Log.e("RutinasClientes", "Error al eliminar la rutina", e);
                                 });
                     }
                 })
                 .addOnFailureListener(e -> {
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Toast.makeText(this, "Error al buscar la rutina para eliminar.", Toast.LENGTH_SHORT).show();
                 });
     }
-
 
 }

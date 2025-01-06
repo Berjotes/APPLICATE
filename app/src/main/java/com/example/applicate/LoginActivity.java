@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -43,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //
     private void iniciarSesion(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
@@ -55,15 +55,18 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         // Error en el login
                         Log.w("LoginActivity", "iniciarSesionConEmail:error", task.getException());
+
+                        // Enviar detalles del error a Crashlytics
+                        FirebaseCrashlytics.getInstance().recordException(task.getException());
                         Toast.makeText(LoginActivity.this, "Error: Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    //
     private void irAListaClientes() {
         Intent intent = new Intent(LoginActivity.this, GestorClientesActivity.class);
         startActivity(intent);
         finish();
     }
+
 }

@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
@@ -84,10 +85,12 @@ public class AgregarNuevoClienteActivity extends AppCompatActivity {
         db.collection("CLIENTES").document(clientId)
                 .set(client)
                 .addOnSuccessListener(aVoid -> {
+                    FirebaseCrashlytics.getInstance().log("Cliente guardado exitosamente: " + clientId);
                     Toast.makeText(AgregarNuevoClienteActivity.this, "Cliente guardado", Toast.LENGTH_SHORT).show();
                     finish();  // Cerrar la actividad después de guardar
                 })
                 .addOnFailureListener(e -> {
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Toast.makeText(AgregarNuevoClienteActivity.this, "Error al guardar cliente", Toast.LENGTH_SHORT).show();
                 });
     }

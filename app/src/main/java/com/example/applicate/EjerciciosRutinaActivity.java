@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -60,7 +61,7 @@ public class EjerciciosRutinaActivity extends AppCompatActivity {
 
     private void obtenerGruposMusculares() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("EJERCICIOS") // Aquí aseguramos el nombre exacto de la colección
+        db.collection("EJERCICIOS")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots.isEmpty()) {
@@ -68,7 +69,6 @@ public class EjerciciosRutinaActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // Extraer los valores únicos de 'grupo_muscular'
                     Set<String> gruposMusculares = new HashSet<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String grupo = document.getString("grupo_muscular");
@@ -85,9 +85,11 @@ public class EjerciciosRutinaActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error al cargar los datos.", Toast.LENGTH_SHORT).show();
+                    FirebaseCrashlytics.getInstance().recordException(e); // Registrar el error en Crashlytics
                     e.printStackTrace();
                 });
     }
+
 
     private void mostrarDialogoGruposMusculares(List<String> gruposMusculares) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -12,6 +12,5 @@ public class MyApp extends Application {
         // Inicializar Firebase
         FirebaseApp.initializeApp(this);
 
-        // Aquí puedes inicializar otras librerías globales si es necesario.
     }
 }

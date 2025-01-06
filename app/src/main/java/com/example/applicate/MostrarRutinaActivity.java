@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -129,6 +130,7 @@ public class MostrarRutinaActivity extends AppCompatActivity {
                     mostrarRutina(ejerciciosAgrupadosPorDia);
                 })
                 .addOnFailureListener(e -> {
+                    FirebaseCrashlytics.getInstance().recordException(e); // Registro del error
                     Toast.makeText(this, "Error al cargar los ejercicios de la rutina.", Toast.LENGTH_SHORT).show();
                     Log.e("MostrarRutinaActivity", "Error al obtener ejercicios", e);
                 });
@@ -188,8 +190,6 @@ public class MostrarRutinaActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void crearYCompartirPDF(String contenido) {
         String idCliente = getIntent().getStringExtra("idCliente");
         String idRutina = getIntent().getStringExtra("idRutina");
@@ -228,6 +228,7 @@ public class MostrarRutinaActivity extends AppCompatActivity {
                             });
                 })
                 .addOnFailureListener(e -> {
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Toast.makeText(this, "Error al obtener el cliente.", Toast.LENGTH_SHORT).show();
                 });
     }
@@ -288,13 +289,11 @@ public class MostrarRutinaActivity extends AppCompatActivity {
             compartirPDF(archivo);
 
         } catch (IOException e) {
+            FirebaseCrashlytics.getInstance().recordException(e); // Registro del error
             Toast.makeText(this, "Error al generar el PDF.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
-
-
-
 
     private void compartirPDF(File archivo) {
         try {
@@ -311,6 +310,7 @@ public class MostrarRutinaActivity extends AppCompatActivity {
 
             startActivity(Intent.createChooser(shareIntent, "Compartir rutina"));
         } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e); // Registro del error
             Toast.makeText(this, "Error al compartir el archivo: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }

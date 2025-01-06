@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.applicate.R;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.List;
 
@@ -55,17 +56,22 @@ public class AdaptadorCliente extends RecyclerView.Adapter<AdaptadorCliente.Vist
 
         holder.itemView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
+                // Registrar clic en Crashlytics
+                FirebaseCrashlytics.getInstance().log("Cliente seleccionado: " + nombreCliente);
                 onItemClickListener.onItemClick(nombreCliente);
             }
         });
 
         holder.itemView.setOnLongClickListener(v -> {
             if (onItemLongClickListener != null) {
+                // Registrar clic largo en Crashlytics
+                FirebaseCrashlytics.getInstance().log("Clic largo en cliente: " + nombreCliente);
                 return onItemLongClickListener.onItemLongClick(nombreCliente);
             }
             return false;
         });
     }
+
 
     @Override
     public int getItemCount() {

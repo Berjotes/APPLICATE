@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.applicate.modelos.Ejercicio;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -189,8 +190,10 @@ public class AgregarEjercicioActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error al cargar ejercicios.", Toast.LENGTH_SHORT).show();
-                    Log.e("AgregarEjercicio", "Error al cargar ejercicios", e);
+                    Log.e("AgregarEjercicio", "Error al cargar ejercicios. ", e);
+                    FirebaseCrashlytics.getInstance().recordException(e); // Registro en Crashlytics
                 });
+
     }
 
     private void obtenerGruposMusculares(String dia) {
@@ -385,12 +388,15 @@ public class AgregarEjercicioActivity extends AppCompatActivity {
                             .add(datosEjercicio)
                             .addOnSuccessListener(documentReference ->
                                     Log.d("AgregarEjercicioActivity", "Ejercicio guardado con ID: " + documentReference.getId()))
-                            .addOnFailureListener(e ->
-                                    Log.e("AgregarEjercicioActivity", "Error al guardar ejercicio: " + ejercicio.getNombre(), e));
+                            .addOnFailureListener(e -> {
+                                Log.e("AgregarEjercicioActivity", "Error al guardar ejercicio: " + ejercicio.getNombre(), e);
+                                FirebaseCrashlytics.getInstance().recordException(e); // Registro en Crashlytics
+                            });
 
                     posicion++; // Incrementar posición
                 } catch (Exception ex) {
                     Log.e("AgregarEjercicioActivity", "Error al preparar datos del ejercicio: " + ejercicio.getNombre(), ex);
+                    FirebaseCrashlytics.getInstance().recordException(ex); // Registro en Crashlytics
                 }
             }
         }
